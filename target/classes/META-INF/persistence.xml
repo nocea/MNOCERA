@@ -7,7 +7,7 @@ version="3.0">
 <persistence-unit name="default">
 <class>DAOS.Prestamo</class>
 <class>DAOS.Vajilla</class>
-<class>DAOS.rel_vajilla_prestamo</class>
+<class>DAOS.rel_prestamo_vajilla</class>
 <exclude-unlisted-classes/>
 <properties>
 <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>

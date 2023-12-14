@@ -4,7 +4,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
+import DAOS.Prestamo;
 import DAOS.Vajilla;
+import DAOS.rel_prestamo_vajilla;
 import jakarta.persistence.EntityManager;
 
 public class Implementacion_Consultas implements Interfaz_Consultas {
@@ -115,24 +117,51 @@ public class Implementacion_Consultas implements Interfaz_Consultas {
 			System.out.println("[ERROR]-Se ha producido un error");
 		}
 	}
-	//NO ME HA DADO TIEMPO A TERMINAR LA RESERVA
 	@Override
 	public void CrearReserva(EntityManager em) {
 		em.getTransaction().begin();
+		int dia,mes,año,idElemento,cantidadReservar,idPrestamo=0;
+		Boolean existePrestamo=false;
+		List<Vajilla> listaElementos;
 		Scanner scan=new Scanner(System.in);
 		Calendar fchReserva=Calendar.getInstance();
-		fchReserva.getTime();
-		int cantidad;
-		int idElemento;
-		List<Vajilla>listaElementos;
+		System.out.println("Introduce el dia de la reserva: ");
+		dia=scan.nextInt();
+		System.out.println("Introduce el mes de la reserva: ");
+		mes=scan.nextInt();
+		System.out.println("Introduce el año de la reserva: ");
+		año=scan.nextInt();
+		fchReserva.set(año, mes-1, dia);
+		List<Prestamo>listaPrestamos=em.createQuery("SELECT a FROM Prestamo a", Prestamo.class).getResultList();
+		Prestamo prestamo=new Prestamo(fchReserva);
+		em.persist(prestamo);
+		em.getTransaction().commit();
+		em.getTransaction().begin();
+		System.out.println("Se ha guardado el prestamo");
 		listaElementos=MostrarElementos(em);
 		for (int i = 0; i < listaElementos.size(); i++) {
 			System.out.println(listaElementos.get(i).toString());
 		}
-		System.out.println("Introduzca el id del elemento que desea reservar");
-		idElemento=scan.nextInt();
+			System.out.println("Introduce el id del que quieras seleccionar la reserva: ");
+			idElemento=scan.nextInt();
 		Vajilla elemento=em.find(Vajilla.class,idElemento);
-		
+		System.out.println("Guarda la reserva");
+		List<Prestamo>listaReservas=em.createQuery("SELECT a FROM Prestamo a", Prestamo.class).getResultList();
+		for (int i = 0; i < listaReservas.size(); i++) {
+			if(listaReservas.get(i).getFchReserva()==fchReserva)
+				idPrestamo=listaReservas.get(i).getIdReserva();
+		}
+		Prestamo prestamoElegido=em.find(Prestamo.class,idPrestamo);
+		System.out.println("Introduce la cantidad a reservar: ");
+		cantidadReservar=scan.nextInt();
+		if(cantidadReservar>elemento.getCantidadElemento()) {
+			System.out.println("No se puede reservar mas del stock");
+		}
+		else {
+		rel_prestamo_vajilla reserva=new rel_prestamo_vajilla(cantidadReservar,elemento,prestamoElegido);
+		em.persist(reserva);
+		em.getTransaction().commit();
+		}
 	}
 
 }

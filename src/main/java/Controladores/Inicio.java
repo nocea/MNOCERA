@@ -36,7 +36,7 @@ public class Inicio {
 				interfazConsultas.MostrarStock(em);
 				break;
 			case 5:
-				System.out.println("NO ME HA DADO TIEMPO A TERMINAR LA RESERVA");
+				interfazConsultas.CrearReserva(em);
 				break;
 			}
 			

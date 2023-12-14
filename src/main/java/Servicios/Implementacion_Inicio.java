@@ -19,7 +19,7 @@ public class Implementacion_Inicio implements Interfaz_Inicio {
 			opcion=scan.nextInt();
 			if(opcion<0||opcion>5)
 				System.out.println("[ERROR]-Esa opción no está en el menú");
-		}while(opcion<0||opcion>4);
+		}while(opcion<0||opcion>5);
 		return opcion;
 	}
 
