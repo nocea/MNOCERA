@@ -14,9 +14,7 @@ public class Prestamo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="idReserva")
 	private int idReserva;
-	
+
 	@Column(name="fchReserva")
 	private Calendar fchReserva;
-	@OneToMany(mappedBy="prestamo")
-	List<rel_vajilla_prestamo> listaPrestamos;
 }

@@ -26,8 +26,6 @@ public class Vajilla {
 	@Column(name="cantidadElemento")
 	private int cantidadElemento;
 	//Relaciones
-	@OneToMany(mappedBy="vajilla")
-	List<rel_vajilla_prestamo> listaVajillas;
 	//Getters y Setters
 	public int getCantidadElemento() {
 		return cantidadElemento;
