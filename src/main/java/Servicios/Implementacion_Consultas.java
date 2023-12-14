@@ -117,6 +117,7 @@ public class Implementacion_Consultas implements Interfaz_Consultas {
 			System.out.println("[ERROR]-Se ha producido un error");
 		}
 	}
+	//Funciona sin gestionar las fechas
 	@Override
 	public void CrearReserva(EntityManager em) {
 		em.getTransaction().begin();
@@ -124,6 +125,7 @@ public class Implementacion_Consultas implements Interfaz_Consultas {
 		Boolean existePrestamo=false;
 		List<Vajilla> listaElementos;
 		Scanner scan=new Scanner(System.in);
+		//Pido la fecha
 		Calendar fchReserva=Calendar.getInstance();
 		System.out.println("Introduce el dia de la reserva: ");
 		dia=scan.nextInt();
@@ -131,33 +133,43 @@ public class Implementacion_Consultas implements Interfaz_Consultas {
 		mes=scan.nextInt();
 		System.out.println("Introduce el año de la reserva: ");
 		año=scan.nextInt();
+		//la guardo
 		fchReserva.set(año, mes-1, dia);
-		List<Prestamo>listaPrestamos=em.createQuery("SELECT a FROM Prestamo a", Prestamo.class).getResultList();
+		//y guardo el prestamo
 		Prestamo prestamo=new Prestamo(fchReserva);
 		em.persist(prestamo);
 		em.getTransaction().commit();
 		em.getTransaction().begin();
 		System.out.println("Se ha guardado el prestamo");
+		//Muestro los elementos
 		listaElementos=MostrarElementos(em);
 		for (int i = 0; i < listaElementos.size(); i++) {
+			
 			System.out.println(listaElementos.get(i).toString());
 		}
 			System.out.println("Introduce el id del que quieras seleccionar la reserva: ");
 			idElemento=scan.nextInt();
+			//guardo el elemento a reservar
 		Vajilla elemento=em.find(Vajilla.class,idElemento);
 		System.out.println("Guarda la reserva");
+		//obtengo las reservas/prestamos
 		List<Prestamo>listaReservas=em.createQuery("SELECT a FROM Prestamo a", Prestamo.class).getResultList();
 		for (int i = 0; i < listaReservas.size(); i++) {
+			//si la fecha de la reserva es la fecha que he introducido antes guardo su id
 			if(listaReservas.get(i).getFchReserva()==fchReserva)
 				idPrestamo=listaReservas.get(i).getIdReserva();
 		}
+		//por el id que he guardado antes obtengo el prestamo
 		Prestamo prestamoElegido=em.find(Prestamo.class,idPrestamo);
+		//guardo la cantidad a reservar
 		System.out.println("Introduce la cantidad a reservar: ");
 		cantidadReservar=scan.nextInt();
+		//si la cantidad es mas que el stock no dejo reservar
 		if(cantidadReservar>elemento.getCantidadElemento()) {
 			System.out.println("No se puede reservar mas del stock");
 		}
 		else {
+			//si es menor le paso todos los campos a la reserva y la guardo
 		rel_prestamo_vajilla reserva=new rel_prestamo_vajilla(cantidadReservar,elemento,prestamoElegido);
 		em.persist(reserva);
 		em.getTransaction().commit();

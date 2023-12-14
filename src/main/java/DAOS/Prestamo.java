@@ -33,8 +33,6 @@ public class Prestamo {
 	public Prestamo() {
 		super();
 	}
-	
-	
 	public void setIdReserva(int idReserva) {
 		this.idReserva = idReserva;
 	}
